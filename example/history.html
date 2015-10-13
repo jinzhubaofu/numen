@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>history history example</title>
+</head>
+<body>
+
+<h3>history locator</h3>
+
+<a href="?name=a">a</a>
+<a href="?name=b">b</a>
+<a href="?name=c">c</a>
+<a href="?name=d">d</a>
+
+<button id="push">push state</button>
+
+<script src="http://s1.bdstatic.com/r/www/cache/ecom/esl/2-0-6/esl.js"></script>
+<script>
+require.config({
+    baseUrl: '.',
+    packages: [{
+        name: 'numen',
+        location: '../src',
+        main: 'main'
+    }]
+});
+require(['history'], function (index) {
+    index.init();
+});
+</script>
+</body>
+</html>

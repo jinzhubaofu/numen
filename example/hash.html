@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>hash example</title>
+</head>
+<body>
+
+<h3>hash locator</h3>
+
+<a href="#/a">a</a>
+<a href="#/b">b</a>
+<a href="#/c">c</a>
+<a href="#/d">d</a>
+
+<button id="push">push state</button>
+
+<script src="http://s1.bdstatic.com/r/www/cache/ecom/esl/2-0-6/esl.js"></script>
+<script>
+require.config({
+    baseUrl: '.',
+    packages: [{
+        name: 'numen',
+        location: '../src',
+        main: 'main'
+    }]
+});
+require(['hash'], function (hash) {
+    hash.init();
+});
+</script>
+</body>
+</html>
