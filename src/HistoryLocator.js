@@ -3,20 +3,19 @@
  * @author leon(ludafa@outlook.com)
  */
 
-import Locator from './Locator';
-import Location from './Location';
+let Locator =  require('./Locator');
+let Location =  require('./Location');
 
-import {
-    addEventListener,
-    removeEventListener,
-    guid
-} from './util';
+let util = require('./util');
 
-import {
-    PUSH,
-    REPLACE,
-    TRAVEL
-} from './action';
+let addEventListener = util.addEventListener;
+let removeEventListener = util.removeEventListener;
+let guid = util.guid;
+
+let action = require('./action');
+let PUSH = action.PUSH;
+let REPLACE = action.REPLACE;
+let TRAVEL = action.TRAVEL;
 
 class HistoryLocator extends Locator {
 
@@ -82,4 +81,4 @@ class HistoryLocator extends Locator {
 
 }
 
-export default HistoryLocator;
+module.exports = HistoryLocator;

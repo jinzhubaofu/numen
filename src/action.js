@@ -10,7 +10,7 @@
  * @const
  * @type {string}
  */
-export const TRAVEL = 'TRAVEL';
+exports.TRAVEL = 'TRAVEL';
 
 /**
  * 这货的含义是初始化操作
@@ -18,7 +18,7 @@ export const TRAVEL = 'TRAVEL';
  * @const
  * @type {string}
  */
-export const INIT = 'INIT';
+exports.INIT = 'INIT';
 
 /**
  * 这货代表了pushState操作
@@ -26,7 +26,7 @@ export const INIT = 'INIT';
  * @const
  * @type {string}
  */
-export const PUSH = 'PUSH';
+exports.PUSH = 'PUSH';
 
 /**
  * 这货代表了replaceState操作
@@ -34,10 +34,4 @@ export const PUSH = 'PUSH';
  * @const
  * @type {string}
  */
-export const REPLACE = 'REPLACE';
-
-export default {
-    TRAVEL,
-    PUSH,
-    REPLACE
-};
+exports.REPLACE = 'REPLACE';

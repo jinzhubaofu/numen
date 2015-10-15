@@ -8,11 +8,15 @@ define('numen/Locator', [
     './action'
 ], function (require, exports, module) {
     var babelHelpers = require('./babelHelpers');
-    Object.defineProperty(exports, '__esModule', { value: true });
-    var _util = require('./util');
-    var _Location = require('./Location');
-    var _Location2 = babelHelpers.interopRequireDefault(_Location);
-    var _action = require('./action');
+    var util = require('./util');
+    var toQueryString = util.toQueryString;
+    var guid = util.guid;
+    var addQuery = util.addQuery;
+    var Location = require('./Location');
+    var action = require('./action');
+    var PUSH = action.PUSH;
+    var REPLACE = action.REPLACE;
+    var TRAVEL = action.TRAVEL;
     var History = function () {
         function History() {
             babelHelpers.classCallCheck(this, History);
@@ -65,7 +69,7 @@ define('numen/Locator', [
                     var query = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
                     var force = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
                     var title = arguments.length <= 3 || arguments[3] === undefined ? '' : arguments[3];
-                    var nextLocation = new _Location2['default']((0, _util.addQuery)(url, query), _action.PUSH, (0, _util.guid)(), title);
+                    var nextLocation = new Location(addQuery(url, query), PUSH, guid(), title);
                     this.transit(nextLocation, force);
                 }
             },
@@ -75,7 +79,7 @@ define('numen/Locator', [
                     var query = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
                     var force = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
                     var title = arguments.length <= 3 || arguments[3] === undefined ? '' : arguments[3];
-                    var nextLocation = new _Location2['default']((0, _util.addQuery)(url, query), _action.REPLACE, (0, _util.guid)(), title);
+                    var nextLocation = new Location(addQuery(url, query), REPLACE, guid(), title);
                     this.transit(nextLocation, force);
                 }
             },
@@ -101,7 +105,7 @@ define('numen/Locator', [
                             _this.finishTransit(nextLocation);
                             return;
                         }
-                        if (nextLocation.action !== _action.TRAVEL) {
+                        if (nextLocation.action !== TRAVEL) {
                             return;
                         }
                         var currentLocationIndex = currentLocation ? _this.getLocationIndex(currentLocation) : -1;
@@ -129,10 +133,10 @@ define('numen/Locator', [
                     var id = nextLocation.id;
                     var currentLocationIndex = currentLocation ? this.getLocationIndex(currentLocation) : -1;
                     switch (action) {
-                    case _action.PUSH:
+                    case PUSH:
                         this.stack = currentLocationIndex === -1 ? [id] : stack.slice(0, currentLocationIndex + 1).concat(id);
                         break;
-                    case _action.REPLACE:
+                    case REPLACE:
                         if (currentLocationIndex !== -1) {
                             this.stack[currentLocationIndex] = id;
                         }
@@ -181,7 +185,7 @@ define('numen/Locator', [
                 value: function createHref(pathname, query) {
                     var index = pathname.indexOf('?');
                     var connector = index === -1 ? '?' : '&';
-                    return pathname + connector + (0, _util.toQueryString)(query);
+                    return pathname + connector + toQueryString(query);
                 }
             },
             {
@@ -234,6 +238,5 @@ define('numen/Locator', [
         ]);
         return History;
     }();
-    exports['default'] = History;
-    module.exports = exports['default'];
+    module.exports = History;
 });

@@ -9,13 +9,18 @@ define('numen/HashLocator', [
     './action'
 ], function (require, exports, module) {
     var babelHelpers = require('./babelHelpers');
-    Object.defineProperty(exports, '__esModule', { value: true });
-    var _util = require('./util');
-    var _Locator2 = require('./Locator');
-    var _Locator3 = babelHelpers.interopRequireDefault(_Locator2);
-    var _Location = require('./Location');
-    var _Location2 = babelHelpers.interopRequireDefault(_Location);
-    var _action = require('./action');
+    var util = require('./util');
+    var addEventListener = util.addEventListener;
+    var removeEventListener = util.removeEventListener;
+    var getHash = util.getHash;
+    var addQuery = util.addQuery;
+    var guid = util.guid;
+    var Locator = require('./Locator');
+    var Location = require('./Location');
+    var action = require('./action');
+    var PUSH = action.PUSH;
+    var REPLACE = action.REPLACE;
+    var TRAVEL = action.TRAVEL;
     var HashLocator = function (_Locator) {
         babelHelpers.inherits(HashLocator, _Locator);
         function HashLocator() {
@@ -26,7 +31,7 @@ define('numen/HashLocator', [
             {
                 key: 'getLocation',
                 value: function getLocation(e) {
-                    return new _Location2['default']((0, _util.getHash)(window.location), _action.TRAVEL, (0, _util.guid)(), '');
+                    return new Location(getHash(window.location), TRAVEL, guid(), '');
                 }
             },
             {
@@ -35,8 +40,8 @@ define('numen/HashLocator', [
                     babelHelpers.get(Object.getPrototypeOf(HashLocator.prototype), 'finishTransit', this).call(this, nextLocation);
                     var action = nextLocation.action;
                     switch (action) {
-                    case _action.PUSH:
-                    case _action.REPLACE:
+                    case PUSH:
+                    case REPLACE:
                         window.location.hash = nextLocation.toString();
                         return;
                     }
@@ -46,26 +51,25 @@ define('numen/HashLocator', [
                 key: 'start',
                 value: function start() {
                     babelHelpers.get(Object.getPrototypeOf(HashLocator.prototype), 'start', this).call(this);
-                    (0, _util.addEventListener)(window, 'hashchange', this.onLocationChange);
+                    addEventListener(window, 'hashchange', this.onLocationChange);
                     return this;
                 }
             },
             {
                 key: 'stop',
                 value: function stop() {
-                    (0, _util.removeEventListener)(window, 'hashchange', this.onLocationChange);
+                    removeEventListener(window, 'hashchange', this.onLocationChange);
                     return this;
                 }
             },
             {
                 key: 'createHref',
                 value: function createHref(pathname, query) {
-                    return '#' + (0, _util.addQuery)(pathname, query);
+                    return '#' + addQuery(pathname, query);
                 }
             }
         ]);
         return HashLocator;
-    }(_Locator3['default']);
-    exports['default'] = HashLocator;
-    module.exports = exports['default'];
+    }(Locator);
+    module.exports = HashLocator;
 });

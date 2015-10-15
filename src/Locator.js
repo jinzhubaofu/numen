@@ -3,9 +3,17 @@
  * @author leon(ludafa@outlook.com)
  */
 
-import {toQueryString, guid, addQuery} from './util';
-import Location from './Location';
-import {PUSH, REPLACE, TRAVEL} from './action';
+let util = require('./util');
+let toQueryString = util.toQueryString;
+let guid = util.guid;
+let addQuery = util.addQuery;
+
+let Location =  require('./Location');
+
+let action = require('./action');
+let PUSH = action.PUSH;
+let REPLACE = action.REPLACE;
+let TRAVEL = action.TRAVEL;
 
 class History {
 
@@ -261,4 +269,4 @@ class History {
 
 }
 
-export default History;
+module.exports = History;

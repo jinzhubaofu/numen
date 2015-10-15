@@ -3,30 +3,21 @@ define('numen/util', [
     'exports',
     'module'
 ], function (require, exports, module) {
-    Object.defineProperty(exports, '__esModule', { value: true });
-    exports.addEventListener = addEventListener;
-    exports.removeEventListener = removeEventListener;
-    exports.toQueryString = toQueryString;
-    exports.addQuery = addQuery;
-    exports.guid = guid;
-    exports.parseQueryString = parseQueryString;
-    exports.getHash = getHash;
-    exports.normalize = normalize;
-    function addEventListener(target, eventName, handler) {
+    exports.addEventListener = function addEventListener(target, eventName, handler) {
         if (target.addEventListener) {
             target.addEventListener(eventName, handler);
             return;
         }
         target.attachEvent('on' + eventName, handler);
-    }
-    function removeEventListener(target, eventName, handler) {
+    };
+    exports.removeEventListener = function removeEventListener(target, eventName, handler) {
         if (target.removeEventListener) {
             target.removeEventListener(eventName, handler);
             return;
         }
         target.detachEvent('on' + eventName, handler);
-    }
-    function toQueryString(query) {
+    };
+    var toQueryString = exports.toQueryString = function toQueryString(query) {
         return Object.keys(query).map(function (name) {
             var value = query[name];
             name = encodeURIComponent(name);
@@ -37,15 +28,15 @@ define('numen/util', [
             }
             return name + '=' + encodeURIComponent(value);
         }).join('&');
-    }
-    function addQuery(path, query) {
+    };
+    exports.addQuery = function addQuery(path, query) {
         return '' + path + (path.indexOf('?') === -1 ? '?' : '&') + toQueryString(query);
-    }
-    function guid() {
+    };
+    exports.guid = function guid() {
         var length = arguments.length <= 0 || arguments[0] === undefined ? 8 : arguments[0];
         return Math.random().toString(36).substr(2, length);
-    }
-    function parseQueryString(querystring) {
+    };
+    exports.parseQueryString = function parseQueryString(querystring) {
         return querystring.split('&').reduce(function (query, term) {
             term = term.split('=');
             var name = term[0];
@@ -66,14 +57,14 @@ define('numen/util', [
             }
             return query;
         }, {});
-    }
-    function getHash(target) {
+    };
+    exports.getHash = function getHash(target) {
         var href = target.href;
         var index = href.indexOf('#');
         return index === -1 ? '' : href.slice(index + 1);
-    }
+    };
     var HTTP_PREFIX_REGEXP = /^https?:\/\/[^\/]*/;
-    function normalize(path) {
+    exports.normalize = function normalize(path) {
         var match = HTTP_PREFIX_REGEXP.exec(path);
         if (match) {
             path = path.slice(match[1].length);
@@ -82,5 +73,5 @@ define('numen/util', [
             path = '/' + path;
         }
         return path;
-    }
+    };
 });

@@ -3,7 +3,7 @@
  * @author leon(ludafa@outlook.com)
  */
 
-export function addEventListener(target, eventName, handler) {
+exports.addEventListener = function addEventListener(target, eventName, handler) {
 
     if (target.addEventListener) {
         target.addEventListener(eventName, handler);
@@ -12,9 +12,9 @@ export function addEventListener(target, eventName, handler) {
 
     target.attachEvent('on' + eventName, handler);
 
-}
+};
 
-export function removeEventListener(target, eventName, handler) {
+exports.removeEventListener = function removeEventListener(target, eventName, handler) {
 
     if (target.removeEventListener) {
         target.removeEventListener(eventName, handler);
@@ -22,9 +22,9 @@ export function removeEventListener(target, eventName, handler) {
     }
 
     target.detachEvent('on' + eventName, handler);
-}
+};
 
-export function toQueryString(query) {
+let toQueryString = exports.toQueryString = function toQueryString(query) {
 
     return Object
         .keys(query)
@@ -44,20 +44,20 @@ export function toQueryString(query) {
         })
         .join('&');
 
-}
+};
 
-export function addQuery(path, query) {
+exports.addQuery = function addQuery(path, query) {
     return ''
         + path
         + (path.indexOf('?') === -1 ? '?' : '&')
         + toQueryString(query);
-}
+};
 
-export function guid(length = 8) {
+exports.guid = function guid(length = 8) {
     return Math.random().toString(36).substr(2, length);
-}
+};
 
-export function parseQueryString(querystring) {
+exports.parseQueryString = function parseQueryString(querystring) {
 
     return querystring
         .split('&')
@@ -88,17 +88,17 @@ export function parseQueryString(querystring) {
 
         }, {});
 
-}
+};
 
-export function getHash(target) {
+exports.getHash = function getHash(target) {
     let href = target.href;
     let index = href.indexOf('#');
     return index === -1 ? '' : href.slice(index + 1);
-}
+};
 
 const HTTP_PREFIX_REGEXP = /^https?:\/\/[^\/]*/;
 
-export function normalize(path) {
+exports.normalize = function normalize(path) {
 
     let match = HTTP_PREFIX_REGEXP.exec(path);
 
@@ -112,5 +112,5 @@ export function normalize(path) {
 
     return path;
 
-}
+};
 

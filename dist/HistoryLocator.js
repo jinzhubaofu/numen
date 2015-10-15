@@ -9,13 +9,16 @@ define('numen/HistoryLocator', [
     './action'
 ], function (require, exports, module) {
     var babelHelpers = require('./babelHelpers');
-    Object.defineProperty(exports, '__esModule', { value: true });
-    var _Locator2 = require('./Locator');
-    var _Locator3 = babelHelpers.interopRequireDefault(_Locator2);
-    var _Location = require('./Location');
-    var _Location2 = babelHelpers.interopRequireDefault(_Location);
-    var _util = require('./util');
-    var _action = require('./action');
+    var Locator = require('./Locator');
+    var Location = require('./Location');
+    var util = require('./util');
+    var addEventListener = util.addEventListener;
+    var removeEventListener = util.removeEventListener;
+    var guid = util.guid;
+    var action = require('./action');
+    var PUSH = action.PUSH;
+    var REPLACE = action.REPLACE;
+    var TRAVEL = action.TRAVEL;
     var HistoryLocator = function (_Locator) {
         babelHelpers.inherits(HistoryLocator, _Locator);
         function HistoryLocator() {
@@ -27,14 +30,14 @@ define('numen/HistoryLocator', [
                 key: 'start',
                 value: function start() {
                     babelHelpers.get(Object.getPrototypeOf(HistoryLocator.prototype), 'start', this).call(this);
-                    (0, _util.addEventListener)(window, 'popstate', this.onLocationChange);
+                    addEventListener(window, 'popstate', this.onLocationChange);
                     return this;
                 }
             },
             {
                 key: 'stop',
                 value: function stop() {
-                    (0, _util.removeEventListener)(window, 'popstate', this.onLocationChange);
+                    removeEventListener(window, 'popstate', this.onLocationChange);
                     return this;
                 }
             },
@@ -46,7 +49,7 @@ define('numen/HistoryLocator', [
                     var search = loc.search;
                     var hash = loc.hash;
                     var path = pathname + search + hash;
-                    return new _Location2['default'](path, _action.TRAVEL, (0, _util.guid)(), '');
+                    return new Location(path, TRAVEL, guid(), '');
                 }
             },
             {
@@ -55,10 +58,10 @@ define('numen/HistoryLocator', [
                     var action = nextLocation.action;
                     var title = nextLocation.title;
                     switch (action) {
-                    case _action.PUSH:
+                    case PUSH:
                         window.history.pushState(null, title, nextLocation.toString());
                         break;
-                    case _action.REPLACE:
+                    case REPLACE:
                         window.history.replaceState(null, title, nextLocation.toString());
                         break;
                     }
@@ -80,7 +83,6 @@ define('numen/HistoryLocator', [
             }
         ]);
         return HistoryLocator;
-    }(_Locator3['default']);
-    exports['default'] = HistoryLocator;
-    module.exports = exports['default'];
+    }(Locator);
+    module.exports = HistoryLocator;
 });

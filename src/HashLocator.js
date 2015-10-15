@@ -3,17 +3,21 @@
  * @author leon(ludafa@outlook.com)
  */
 
-import {
-    addEventListener,
-    removeEventListener,
-    getHash,
-    addQuery
-} from './util';
+let util = require('./util');
 
-import Locator from './Locator';
-import Location from './Location';
-import {PUSH, REPLACE, TRAVEL} from './action';
-import {guid} from './util';
+let addEventListener = util.addEventListener;
+let removeEventListener = util.removeEventListener;
+let getHash = util.getHash;
+let addQuery = util.addQuery;
+let guid = util.guid;
+
+let Locator =  require('./Locator');
+let Location =  require('./Location');
+
+let action = require('./action');
+let PUSH = action.PUSH;
+let REPLACE = action.REPLACE;
+let TRAVEL = action.TRAVEL;
 
 class HashLocator extends Locator {
 
@@ -59,4 +63,4 @@ class HashLocator extends Locator {
 
 }
 
-export default HashLocator;
+module.exports = HashLocator;

@@ -3,12 +3,13 @@
  * @author leon(ludafa@outlook.com)
  */
 
-import {TRAVEL} from './action';
+let action = require('./action');
 
-import {
-    parseQueryString,
-    normalize
-} from './util';
+let TRAVEL = action.TRAVEL;
+
+let util = require('./util');
+let parseQueryString = util.parseQueryString;
+let normalize = util.normalize;
 
 class Location {
 

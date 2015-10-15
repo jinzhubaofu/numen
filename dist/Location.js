@@ -8,15 +8,18 @@ define('numen/Location', [
 ], function (require, exports, module) {
     var babelHelpers = require('./babelHelpers');
     Object.defineProperty(exports, '__esModule', { value: true });
-    var _action = require('./action');
-    var _util = require('./util');
+    var action = require('./action');
+    var TRAVEL = action.TRAVEL;
+    var util = require('./util');
+    var parseQueryString = util.parseQueryString;
+    var normalize = util.normalize;
     var Location = function () {
         function Location(href) {
-            var action = arguments.length <= 1 || arguments[1] === undefined ? _action.TRAVEL : arguments[1];
+            var action = arguments.length <= 1 || arguments[1] === undefined ? TRAVEL : arguments[1];
             var id = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
             var title = arguments.length <= 3 || arguments[3] === undefined ? '' : arguments[3];
             babelHelpers.classCallCheck(this, Location);
-            href = (0, _util.normalize)(href);
+            href = normalize(href);
             this.href = href;
             this.title = title;
             this.action = action;
@@ -33,7 +36,7 @@ define('numen/Location', [
             if (searchIndex !== -1) {
                 var search = this.search = href.slice(searchIndex);
                 var querystring = this.querystring = search.slice(1);
-                this.query = querystring ? (0, _util.parseQueryString)(querystring) : {};
+                this.query = querystring ? parseQueryString(querystring) : {};
                 href = href.slice(0, searchIndex);
             } else {
                 this.search = '';
