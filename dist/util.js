@@ -18,6 +18,9 @@ define('numen/util', [
         target.detachEvent('on' + eventName, handler);
     };
     var toQueryString = exports.toQueryString = function toQueryString(query) {
+        if (!query) {
+            return '';
+        }
         return Object.keys(query).map(function (name) {
             var value = query[name];
             name = encodeURIComponent(name);
@@ -30,7 +33,8 @@ define('numen/util', [
         }).join('&');
     };
     exports.addQuery = function addQuery(path, query) {
-        return '' + path + (path.indexOf('?') === -1 ? '?' : '&') + toQueryString(query);
+        var querystring = toQueryString(query);
+        return querystring ? path + (path.indexOf('?') === -1 ? '?' : '&') + querystring : path;
     };
     exports.guid = function guid() {
         var length = arguments.length <= 0 || arguments[0] === undefined ? 8 : arguments[0];

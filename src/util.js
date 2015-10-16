@@ -26,6 +26,10 @@ exports.removeEventListener = function removeEventListener(target, eventName, ha
 
 let toQueryString = exports.toQueryString = function toQueryString(query) {
 
+    if (!query) {
+        return '';
+    }
+
     return Object
         .keys(query)
         .map(function (name) {
@@ -47,10 +51,13 @@ let toQueryString = exports.toQueryString = function toQueryString(query) {
 };
 
 exports.addQuery = function addQuery(path, query) {
-    return ''
-        + path
-        + (path.indexOf('?') === -1 ? '?' : '&')
-        + toQueryString(query);
+
+    let querystring = toQueryString(query);
+
+    return querystring
+        ? path + (path.indexOf('?') === -1 ? '?' : '&') + querystring
+        : path;
+
 };
 
 exports.guid = function guid(length = 8) {
