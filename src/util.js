@@ -72,8 +72,8 @@ exports.parseQueryString = function parseQueryString(querystring) {
 
             term = term.split('=');
 
-            let name = term[0];
-            let value = term[1];
+            let name = decodeURIComponent(term[0]);
+            let value = decodeURIComponent(term[1]);
 
             if (!name) {
                 return query;

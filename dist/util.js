@@ -43,8 +43,8 @@ define('numen/util', [
     exports.parseQueryString = function parseQueryString(querystring) {
         return querystring.split('&').reduce(function (query, term) {
             term = term.split('=');
-            var name = term[0];
-            var value = term[1];
+            var name = decodeURIComponent(term[0]);
+            var value = decodeURIComponent(term[1]);
             if (!name) {
                 return query;
             }
