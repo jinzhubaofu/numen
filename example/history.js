@@ -11,7 +11,7 @@ export function init() {
 
     locator
         .on(function (location) {
-            console.log('listen', location);
+            console.log('listen', location, locator);
         })
         .use(function (location, next, done) {
 
