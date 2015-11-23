@@ -19,6 +19,7 @@ define('numen/HistoryLocator', [
     var PUSH = action.PUSH;
     var REPLACE = action.REPLACE;
     var TRAVEL = action.TRAVEL;
+    var HISTORY_LOCATOR_STATE_ID_KEY = '__hlik__';
     var HistoryLocator = function (_Locator) {
         babelHelpers.inherits(HistoryLocator, _Locator);
         function HistoryLocator() {
@@ -43,13 +44,19 @@ define('numen/HistoryLocator', [
             },
             {
                 key: 'getLocation',
-                value: function getLocation() {
+                value: function getLocation(e) {
+                    var state = e && e.state || window.history.state || {};
+                    var id = state[HISTORY_LOCATOR_STATE_ID_KEY];
                     var loc = window.location;
                     var pathname = loc.pathname;
                     var search = loc.search;
                     var hash = loc.hash;
                     var path = pathname + search + hash;
-                    return new Location(path, TRAVEL, guid(), '');
+                    if (!id) {
+                        id = guid();
+                        window.history.replaceState(babelHelpers._extends({}, state, babelHelpers.defineProperty({}, HISTORY_LOCATOR_STATE_ID_KEY, id)), null, path);
+                    }
+                    return new Location(path, TRAVEL, id, '');
                 }
             },
             {
@@ -57,12 +64,13 @@ define('numen/HistoryLocator', [
                 value: function finishTransit(nextLocation) {
                     var action = nextLocation.action;
                     var title = nextLocation.title;
+                    var state = babelHelpers.defineProperty({}, HISTORY_LOCATOR_STATE_ID_KEY, nextLocation.id);
                     switch (action) {
                     case PUSH:
-                        window.history.pushState(null, title, nextLocation.toString());
+                        window.history.pushState(state, title, nextLocation.toString());
                         break;
                     case REPLACE:
-                        window.history.replaceState(null, title, nextLocation.toString());
+                        window.history.replaceState(state, title, nextLocation.toString());
                         break;
                     }
                     babelHelpers.get(Object.getPrototypeOf(HistoryLocator.prototype), 'finishTransit', this).call(this, nextLocation);
