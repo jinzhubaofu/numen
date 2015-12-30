@@ -67,7 +67,7 @@ define('numen/util', [
         var index = href.indexOf('#');
         return index === -1 ? '' : href.slice(index + 1);
     };
-    var HTTP_PREFIX_REGEXP = /^https?:\/\/[^\/]*/;
+    var HTTP_PREFIX_REGEXP = /^(https?:\/\/[^\/]*)/;
     exports.normalize = function normalize(path) {
         var match = HTTP_PREFIX_REGEXP.exec(path);
         if (match) {
