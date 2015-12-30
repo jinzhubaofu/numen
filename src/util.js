@@ -103,7 +103,7 @@ exports.getHash = function getHash(target) {
     return index === -1 ? '' : href.slice(index + 1);
 };
 
-const HTTP_PREFIX_REGEXP = /^https?:\/\/[^\/]*/;
+const HTTP_PREFIX_REGEXP = /^(https?:\/\/[^\/]*)/;
 
 exports.normalize = function normalize(path) {
 
