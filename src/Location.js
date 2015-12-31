@@ -26,7 +26,6 @@ class Location {
         href = this.href = (href.indexOf('/') === 0 ? '' : '/') + href;
 
         let hashIndex = href.indexOf('#');
-
         if (hashIndex !== -1) {
             this.hash = href.slice(hashIndex);
             href = href.slice(0, hashIndex);

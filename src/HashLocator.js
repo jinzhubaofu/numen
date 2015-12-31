@@ -3,21 +3,21 @@
  * @author leon(ludafa@outlook.com)
  */
 
-let util = require('./util');
+const util = require('./util');
 
-let addEventListener = util.addEventListener;
-let removeEventListener = util.removeEventListener;
-let getHash = util.getHash;
-let addQuery = util.addQuery;
-let guid = util.guid;
+const addEventListener = util.addEventListener;
+const removeEventListener = util.removeEventListener;
+const getHash = util.getHash;
+const addQuery = util.addQuery;
+const guid = util.guid;
 
-let Locator =  require('./Locator');
-let Location =  require('./Location');
+const Locator =  require('./Locator');
+const Location =  require('./Location');
 
-let action = require('./action');
-let PUSH = action.PUSH;
-let REPLACE = action.REPLACE;
-let TRAVEL = action.TRAVEL;
+const action = require('./action');
+const PUSH = action.PUSH;
+const REPLACE = action.REPLACE;
+const TRAVEL = action.TRAVEL;
 
 class HashLocator extends Locator {
 
