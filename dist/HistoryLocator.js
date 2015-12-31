@@ -24,72 +24,54 @@ define('numen/HistoryLocator', [
         babelHelpers.inherits(HistoryLocator, _Locator);
         function HistoryLocator() {
             babelHelpers.classCallCheck(this, HistoryLocator);
-            babelHelpers.get(Object.getPrototypeOf(HistoryLocator.prototype), 'constructor', this).apply(this, arguments);
+            _Locator.apply(this, arguments);
         }
-        babelHelpers.createClass(HistoryLocator, [
-            {
-                key: 'start',
-                value: function start() {
-                    babelHelpers.get(Object.getPrototypeOf(HistoryLocator.prototype), 'start', this).call(this);
-                    addEventListener(window, 'popstate', this.onLocationChange);
-                    return this;
-                }
-            },
-            {
-                key: 'stop',
-                value: function stop() {
-                    removeEventListener(window, 'popstate', this.onLocationChange);
-                    return this;
-                }
-            },
-            {
-                key: 'getLocation',
-                value: function getLocation(e) {
-                    var state = e && e.state || window.history.state || {};
-                    var id = state[HISTORY_LOCATOR_STATE_ID_KEY];
-                    var loc = window.location;
-                    var pathname = loc.pathname;
-                    var search = loc.search;
-                    var hash = loc.hash;
-                    var path = pathname + search + hash;
-                    if (!id) {
-                        id = guid();
-                        window.history.replaceState(babelHelpers._extends({}, state, babelHelpers.defineProperty({}, HISTORY_LOCATOR_STATE_ID_KEY, id)), null, path);
-                    }
-                    return new Location(path, TRAVEL, id, '');
-                }
-            },
-            {
-                key: 'finishTransit',
-                value: function finishTransit(nextLocation) {
-                    var action = nextLocation.action;
-                    var title = nextLocation.title;
-                    var state = babelHelpers.defineProperty({}, HISTORY_LOCATOR_STATE_ID_KEY, nextLocation.id);
-                    switch (action) {
-                    case PUSH:
-                        window.history.pushState(state, title, nextLocation.toString());
-                        break;
-                    case REPLACE:
-                        window.history.replaceState(state, title, nextLocation.toString());
-                        break;
-                    }
-                    babelHelpers.get(Object.getPrototypeOf(HistoryLocator.prototype), 'finishTransit', this).call(this, nextLocation);
-                }
-            },
-            {
-                key: 'createHref',
-                value: function createHref(nextLocation) {
-                    return nextLocation ? nextLocation.toString() : 'javascript: void 0';
-                }
-            },
-            {
-                key: 'dispose',
-                value: function dispose() {
-                    this.stop();
-                    this.listeners.length = 0;
-                }
+        HistoryLocator.prototype.start = function start() {
+            _Locator.prototype.start.call(this);
+            addEventListener(window, 'popstate', this.onLocationChange);
+            return this;
+        };
+        HistoryLocator.prototype.stop = function stop() {
+            removeEventListener(window, 'popstate', this.onLocationChange);
+            return this;
+        };
+        HistoryLocator.prototype.getLocation = function getLocation(e) {
+            var state = e && e.state || window.history.state || {};
+            var id = state[HISTORY_LOCATOR_STATE_ID_KEY];
+            var loc = window.location;
+            var pathname = loc.pathname;
+            var search = loc.search;
+            var hash = loc.hash;
+            var path = pathname + search + hash;
+            if (!id) {
+                var _babelHelpers$_extends;
+                id = guid();
+                window.history.replaceState(babelHelpers._extends({}, state, (_babelHelpers$_extends = {}, _babelHelpers$_extends[HISTORY_LOCATOR_STATE_ID_KEY] = id, _babelHelpers$_extends)), null, path);
             }
-        ]);
+            return new Location(path, TRAVEL, id, '');
+        };
+        HistoryLocator.prototype.finishTransit = function finishTransit(nextLocation) {
+            var _state;
+            var action = nextLocation.action;
+            var title = nextLocation.title;
+            var state = (_state = {}, _state[HISTORY_LOCATOR_STATE_ID_KEY] = nextLocation.id, _state);
+            switch (action) {
+            case PUSH:
+                window.history.pushState(state, title, nextLocation.toString());
+                break;
+            case REPLACE:
+                window.history.replaceState(state, title, nextLocation.toString());
+                break;
+            }
+            _Locator.prototype.finishTransit.call(this, nextLocation);
+        };
+        HistoryLocator.prototype.createHref = function createHref(nextLocation) {
+            return nextLocation ? nextLocation.toString() : 'javascript: void 0';
+        };
+        HistoryLocator.prototype.dispose = function dispose() {
+            this.stop();
+            this.listeners.length = 0;
+        };
         return HistoryLocator;
     }(Locator);
     module.exports = HistoryLocator;

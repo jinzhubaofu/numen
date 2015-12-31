@@ -25,50 +25,33 @@ define('numen/HashLocator', [
         babelHelpers.inherits(HashLocator, _Locator);
         function HashLocator() {
             babelHelpers.classCallCheck(this, HashLocator);
-            babelHelpers.get(Object.getPrototypeOf(HashLocator.prototype), 'constructor', this).apply(this, arguments);
+            _Locator.apply(this, arguments);
         }
-        babelHelpers.createClass(HashLocator, [
-            {
-                key: 'getLocation',
-                value: function getLocation(e) {
-                    return new Location(getHash(window.location), TRAVEL, guid(), '');
-                }
-            },
-            {
-                key: 'finishTransit',
-                value: function finishTransit(nextLocation) {
-                    babelHelpers.get(Object.getPrototypeOf(HashLocator.prototype), 'finishTransit', this).call(this, nextLocation);
-                    var action = nextLocation.action;
-                    switch (action) {
-                    case PUSH:
-                    case REPLACE:
-                        window.location.hash = nextLocation.toString();
-                        return;
-                    }
-                }
-            },
-            {
-                key: 'start',
-                value: function start() {
-                    babelHelpers.get(Object.getPrototypeOf(HashLocator.prototype), 'start', this).call(this);
-                    addEventListener(window, 'hashchange', this.onLocationChange);
-                    return this;
-                }
-            },
-            {
-                key: 'stop',
-                value: function stop() {
-                    removeEventListener(window, 'hashchange', this.onLocationChange);
-                    return this;
-                }
-            },
-            {
-                key: 'createHref',
-                value: function createHref(pathname, query) {
-                    return '#' + addQuery(pathname, query);
-                }
+        HashLocator.prototype.getLocation = function getLocation(e) {
+            return new Location(getHash(window.location), TRAVEL, guid(), '');
+        };
+        HashLocator.prototype.finishTransit = function finishTransit(nextLocation) {
+            _Locator.prototype.finishTransit.call(this, nextLocation);
+            var action = nextLocation.action;
+            switch (action) {
+            case PUSH:
+            case REPLACE:
+                window.location.hash = nextLocation.toString();
+                return;
             }
-        ]);
+        };
+        HashLocator.prototype.start = function start() {
+            _Locator.prototype.start.call(this);
+            addEventListener(window, 'hashchange', this.onLocationChange);
+            return this;
+        };
+        HashLocator.prototype.stop = function stop() {
+            removeEventListener(window, 'hashchange', this.onLocationChange);
+            return this;
+        };
+        HashLocator.prototype.createHref = function createHref(pathname, query) {
+            return '#' + addQuery(pathname, query);
+        };
         return HashLocator;
     }(Locator);
     module.exports = HashLocator;

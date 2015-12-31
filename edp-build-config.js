@@ -3,8 +3,6 @@
  * @author leon(ludafa@outlook.com)
  */
 
-require('babel/register');
-
 exports.input = __dirname;
 exports.output = require('path').resolve(__dirname, 'output');
 
@@ -25,16 +23,12 @@ exports.getProcessors = function () {
     var babel = new BabelProcessor({
         files: ['src/**/*.js'],
         compileOptions: {
-            stage: 0,
-            modules: 'common',
+            modules: 'commonStrict',
             compact: false,
             ast: false,
             blacklist: ['strict'],
             externalHelpers: true,
-            moduleId: '',
-            getModuleId: function (filename) {
-                return filename.replace('src/', '');
-            }
+            loose: 'all'
         }
     });
 

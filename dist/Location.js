@@ -7,7 +7,6 @@ define('numen/Location', [
     './util'
 ], function (require, exports, module) {
     var babelHelpers = require('./babelHelpers');
-    Object.defineProperty(exports, '__esModule', { value: true });
     var action = require('./action');
     var TRAVEL = action.TRAVEL;
     var util = require('./util');
@@ -43,27 +42,18 @@ define('numen/Location', [
             }
             this.pathname = href;
         }
-        babelHelpers.createClass(Location, [
-            {
-                key: 'toString',
-                value: function toString() {
-                    return '' + (this.pathname || '') + (this.search || '');
-                }
-            },
-            {
-                key: 'equalTo',
-                value: function equalTo(anotherLocation) {
-                    var pathname = this.pathname;
-                    var search = this.search;
-                    if (this === anotherLocation) {
-                        return true;
-                    }
-                    return pathname === anotherLocation.pathname && search === anotherLocation.search;
-                }
+        Location.prototype.toString = function toString() {
+            return '' + (this.pathname || '') + (this.search || '');
+        };
+        Location.prototype.equalTo = function equalTo(anotherLocation) {
+            var pathname = this.pathname;
+            var search = this.search;
+            if (this === anotherLocation) {
+                return true;
             }
-        ]);
+            return pathname === anotherLocation.pathname && search === anotherLocation.search;
+        };
         return Location;
     }();
     exports['default'] = Location;
-    module.exports = exports['default'];
 });
