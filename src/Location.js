@@ -3,13 +3,13 @@
  * @author leon(ludafa@outlook.com)
  */
 
-let action = require('./action');
+const action = require('./action');
 
-let TRAVEL = action.TRAVEL;
+const TRAVEL = action.TRAVEL;
 
-let util = require('./util');
-let parseQueryString = util.parseQueryString;
-let normalize = util.normalize;
+const util = require('./util');
+const parseQueryString = util.parseQueryString;
+const normalize = util.normalize;
 
 class Location {
 
@@ -26,6 +26,7 @@ class Location {
         href = this.href = (href.indexOf('/') === 0 ? '' : '/') + href;
 
         let hashIndex = href.indexOf('#');
+
         if (hashIndex !== -1) {
             this.hash = href.slice(hashIndex);
             href = href.slice(0, hashIndex);
@@ -68,4 +69,4 @@ class Location {
 
 }
 
-export default Location;
+module.exports = Location;

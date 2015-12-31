@@ -55,5 +55,5 @@ define('numen/Location', [
         };
         return Location;
     }();
-    exports['default'] = Location;
+    module.exports = Location;
 });

@@ -3,17 +3,17 @@
  * @author leon(ludafa@outlook.com)
  */
 
-let util = require('./util');
-let toQueryString = util.toQueryString;
-let guid = util.guid;
-let addQuery = util.addQuery;
+const util = require('./util');
+const toQueryString = util.toQueryString;
+const guid = util.guid;
+const addQuery = util.addQuery;
 
-let Location =  require('./Location');
+const Location =  require('./Location');
 
-let action = require('./action');
-let PUSH = action.PUSH;
-let REPLACE = action.REPLACE;
-let TRAVEL = action.TRAVEL;
+const action = require('./action');
+const PUSH = action.PUSH;
+const REPLACE = action.REPLACE;
+const TRAVEL = action.TRAVEL;
 
 class History {
 
