@@ -19,6 +19,8 @@ const TRAVEL = action.TRAVEL;
 
 const HISTORY_LOCATOR_STATE_ID_KEY = '__hlik__';
 
+const HISTORY_API_SUPPORTED = typeof window.history.pushState === 'function';
+
 class HistoryLocator extends Locator {
 
     start() {
@@ -68,14 +70,17 @@ class HistoryLocator extends Locator {
 
             id = guid();
 
-            window.history.replaceState(
-                {
-                    ...state,
-                    [HISTORY_LOCATOR_STATE_ID_KEY]: id
-                },
-                null,
-                path
-            );
+            // 如果支持 history api 我们才可以这样搞，要不然就直接挂了
+            if (HISTORY_API_SUPPORTED) {
+                window.history.replaceState(
+                    {
+                        ...state,
+                        [HISTORY_LOCATOR_STATE_ID_KEY]: id
+                    },
+                    null,
+                    path
+                );
+            }
 
         }
 
@@ -98,12 +103,20 @@ class HistoryLocator extends Locator {
             [HISTORY_LOCATOR_STATE_ID_KEY]: nextLocation.id
         };
 
+        const nextLocationHref = nextLocation.toString();
+
+        // 如果当前浏览器不支持 history api 我们默认的行为是跳转
+        if (!HISTORY_API_SUPPORTED) {
+            window.location = nextLocationHref;
+            return;
+        }
+
         switch (action) {
             case PUSH:
-                window.history.pushState(state, title, nextLocation.toString());
+                window.history.pushState(state, title, nextLocationHref);
                 break;
             case REPLACE:
-                window.history.replaceState(state, title, nextLocation.toString());
+                window.history.replaceState(state, title, nextLocationHref);
                 break;
         }
 
