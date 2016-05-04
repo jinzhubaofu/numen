@@ -10,7 +10,6 @@ define('numen/Location', [
     var action = require('./action');
     var TRAVEL = action.TRAVEL;
     var util = require('./util');
-    var parseQueryString = util.parseQueryString;
     var normalize = util.normalize;
     var Location = function () {
         function Location(href) {
@@ -18,29 +17,10 @@ define('numen/Location', [
             var id = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
             var title = arguments.length <= 3 || arguments[3] === undefined ? '' : arguments[3];
             babelHelpers.classCallCheck(this, Location);
-            href = normalize(href);
-            this.href = href;
             this.title = title;
             this.action = action;
             this.id = id;
-            href = this.href = (href.indexOf('/') === 0 ? '' : '/') + href;
-            var hashIndex = href.indexOf('#');
-            if (hashIndex !== -1) {
-                this.hash = href.slice(hashIndex);
-                href = href.slice(0, hashIndex);
-            } else {
-                this.hash = '';
-            }
-            var searchIndex = href.indexOf('?');
-            if (searchIndex !== -1) {
-                var search = this.search = href.slice(searchIndex);
-                var querystring = this.querystring = search.slice(1);
-                this.query = querystring ? parseQueryString(querystring) : {};
-                href = href.slice(0, searchIndex);
-            } else {
-                this.search = '';
-            }
-            this.pathname = href;
+            Object.assign(this, util.pasreHref(normalize(href)));
         }
         Location.prototype.toString = function toString() {
             return '' + (this.pathname || '') + (this.search || '');

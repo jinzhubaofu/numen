@@ -20,6 +20,7 @@ define('numen/HistoryLocator', [
     var REPLACE = action.REPLACE;
     var TRAVEL = action.TRAVEL;
     var HISTORY_LOCATOR_STATE_ID_KEY = '__hlik__';
+    var HISTORY_API_SUPPORTED = typeof window.history.pushState === 'function';
     var HistoryLocator = function (_Locator) {
         babelHelpers.inherits(HistoryLocator, _Locator);
         function HistoryLocator() {
@@ -44,9 +45,11 @@ define('numen/HistoryLocator', [
             var hash = loc.hash;
             var path = pathname + search + hash;
             if (!id) {
-                var _babelHelpers$_extends;
                 id = guid();
-                window.history.replaceState(babelHelpers._extends({}, state, (_babelHelpers$_extends = {}, _babelHelpers$_extends[HISTORY_LOCATOR_STATE_ID_KEY] = id, _babelHelpers$_extends)), null, path);
+                if (HISTORY_API_SUPPORTED) {
+                    var _babelHelpers$_extends;
+                    window.history.replaceState(babelHelpers._extends({}, state, (_babelHelpers$_extends = {}, _babelHelpers$_extends[HISTORY_LOCATOR_STATE_ID_KEY] = id, _babelHelpers$_extends)), null, path);
+                }
             }
             return new Location(path, TRAVEL, id, '');
         };
@@ -55,12 +58,17 @@ define('numen/HistoryLocator', [
             var action = nextLocation.action;
             var title = nextLocation.title;
             var state = (_state = {}, _state[HISTORY_LOCATOR_STATE_ID_KEY] = nextLocation.id, _state);
+            var nextLocationHref = nextLocation.toString();
+            if (!HISTORY_API_SUPPORTED) {
+                window.location = nextLocationHref;
+                return;
+            }
             switch (action) {
             case PUSH:
-                window.history.pushState(state, title, nextLocation.toString());
+                window.history.pushState(state, title, nextLocationHref);
                 break;
             case REPLACE:
-                window.history.replaceState(state, title, nextLocation.toString());
+                window.history.replaceState(state, title, nextLocationHref);
                 break;
             }
             _Locator.prototype.finishTransit.call(this, nextLocation);

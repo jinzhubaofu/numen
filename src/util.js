@@ -24,7 +24,7 @@ exports.removeEventListener = function removeEventListener(target, eventName, ha
     target.detachEvent('on' + eventName, handler);
 };
 
-let toQueryString = exports.toQueryString = function toQueryString(query) {
+function toQueryString(query) {
 
     if (!query) {
         return '';
@@ -32,31 +32,106 @@ let toQueryString = exports.toQueryString = function toQueryString(query) {
 
     return Object
         .keys(query)
-        .map(function (name) {
+        // 打平结构
+        .reduce(function (items, name) {
 
-            var value = query[name];
+            const value = query[name];
+            const item = Array.isArray(value)
+                ? value.map(function (v) {
+                    return {
+                        name,
+                        value: v
+                    };
+                })
+                : {name, value};
 
-            name = encodeURIComponent(name);
+            return items.concat(item);
 
-            if (Array.isArray(value)) {
-                return value.map(function (item) {
-                    return name + '=' + encodeURIComponent(item);
-                });
+        }, [])
+        // 过滤掉无效项
+        .reduce(function (result, {name, value}) {
+            if (value != null) {
+                result.push(`${encodeURIComponent(name)}=${encodeURIComponent(value)}`);
             }
-
-            return name + '=' + encodeURIComponent(value);
-        })
+            return result;
+        }, [])
+        // 拼接在一起
         .join('&');
 
-};
+}
+
+exports.toQueryString = toQueryString;
+
+function pasreHref(href) {
+
+    // 保证href是以 / 开头的，并不接受相对路径。。。
+    href = (href.indexOf('/') === 0 ? '' : '/') + href;
+
+    let originHref = href;
+    let hashIndex = href.indexOf('#');
+    let hash = '';
+
+    if (hashIndex !== -1) {
+        hash = href.slice(hashIndex);
+        href = href.slice(0, hashIndex);
+    }
+
+    let searchIndex = href.indexOf('?');
+    let search = '';
+    let querystring = '';
+    let query = {};
+
+    if (searchIndex !== -1) {
+        search = href.slice(searchIndex);
+        querystring = search.slice(1);
+        query = querystring ? parseQueryString(querystring) : {};
+        href = href.slice(0, searchIndex);
+    }
+
+    let pathname = href;
+
+    return {
+        href: originHref,
+        pathname, search, hash, query, querystring
+    };
+
+}
+
+exports.pasreHref = pasreHref;
 
 exports.addQuery = function addQuery(path, query) {
 
-    let querystring = toQueryString(query);
+    const location = pasreHref(path);
 
-    return querystring
-        ? path + (path.indexOf('?') === -1 ? '?' : '&') + querystring
-        : path;
+    const nextQuery = Object
+        .keys(query)
+        .reduce(
+            function (currentQuery, key) {
+
+                const value = query[key];
+                const currentQueryValue = currentQuery[key];
+
+                if (Array.isArray(currentQueryValue)) {
+                    currentQuery[key] = currentQueryValue.concat(value);
+                }
+                else if (currentQuery[key] != null) {
+                    currentQuery[key] = [currentQueryValue].concat(value);
+                }
+                else {
+                    currentQuery[key] = value;
+                }
+
+                return currentQuery;
+
+            },
+            location.query
+        );
+
+    const nextQuerystring = toQueryString(nextQuery);
+
+    return nextQuerystring
+        ? `${location.pathname}?${nextQuerystring}`
+        : location.pathname;
 
 };
 
@@ -64,16 +139,20 @@ exports.guid = function guid(length = 8) {
     return Math.random().toString(36).substr(2, length);
 };
 
-exports.parseQueryString = function parseQueryString(querystring) {
+function parseQueryString(querystring) {
+
+    if (!querystring) {
+        return {};
+    }
 
     return querystring
         .split('&')
         .reduce(function (query, term) {
 
-            term = term.split('=');
+            const index = term.indexOf('=');
 
-            let name = decodeURIComponent(term[0]);
-            let value = decodeURIComponent(term[1]);
+            let name = decodeURIComponent(term.slice(0, index));
+            let value = decodeURIComponent(term.slice(index + 1));
 
             if (!name) {
                 return query;
@@ -95,7 +174,9 @@ exports.parseQueryString = function parseQueryString(querystring) {
 
         }, {});
 
-};
+}
+
+exports.parseQueryString = parseQueryString;
 
 exports.getHash = function getHash(target) {
     let href = target.href;

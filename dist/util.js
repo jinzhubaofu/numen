@@ -17,34 +17,91 @@ define('numen/util', [
         }
         target.detachEvent('on' + eventName, handler);
     };
-    var toQueryString = exports.toQueryString = function toQueryString(query) {
+    function toQueryString(query) {
         if (!query) {
             return '';
         }
-        return Object.keys(query).map(function (name) {
+        return Object.keys(query).reduce(function (items, name) {
             var value = query[name];
-            name = encodeURIComponent(name);
-            if (Array.isArray(value)) {
-                return value.map(function (item) {
-                    return name + '=' + encodeURIComponent(item);
-                });
+            var item = Array.isArray(value) ? value.map(function (v) {
+                return {
+                    name: name,
+                    value: v
+                };
+            }) : {
+                name: name,
+                value: value
+            };
+            return items.concat(item);
+        }, []).reduce(function (result, _ref) {
+            var name = _ref.name;
+            var value = _ref.value;
+            if (value != null) {
+                result.push(encodeURIComponent(name) + '=' + encodeURIComponent(value));
             }
-            return name + '=' + encodeURIComponent(value);
-        }).join('&');
-    };
+            return result;
+        }, []).join('&');
+    }
+    exports.toQueryString = toQueryString;
+    function pasreHref(href) {
+        href = (href.indexOf('/') === 0 ? '' : '/') + href;
+        var originHref = href;
+        var hashIndex = href.indexOf('#');
+        var hash = '';
+        if (hashIndex !== -1) {
+            hash = href.slice(hashIndex);
+            href = href.slice(0, hashIndex);
+        }
+        var searchIndex = href.indexOf('?');
+        var search = '';
+        var querystring = '';
+        var query = {};
+        if (searchIndex !== -1) {
+            search = href.slice(searchIndex);
+            querystring = search.slice(1);
+            query = querystring ? parseQueryString(querystring) : {};
+            href = href.slice(0, searchIndex);
+        }
+        var pathname = href;
+        return {
+            href: originHref,
+            pathname: pathname,
+            search: search,
+            hash: hash,
+            query: query,
+            querystring: querystring
+        };
+    }
+    exports.pasreHref = pasreHref;
     exports.addQuery = function addQuery(path, query) {
-        var querystring = toQueryString(query);
-        return querystring ? path + (path.indexOf('?') === -1 ? '?' : '&') + querystring : path;
+        var location = pasreHref(path);
+        var nextQuery = Object.keys(query).reduce(function (currentQuery, key) {
+            var value = query[key];
+            var currentQueryValue = currentQuery[key];
+            if (Array.isArray(currentQueryValue)) {
+                currentQuery[key] = currentQueryValue.concat(value);
+            } else if (currentQuery[key] != null) {
+                currentQuery[key] = [currentQueryValue].concat(value);
+            } else {
+                currentQuery[key] = value;
+            }
+            return currentQuery;
+        }, location.query);
+        var nextQuerystring = toQueryString(nextQuery);
+        return nextQuerystring ? location.pathname + '?' + nextQuerystring : location.pathname;
     };
     exports.guid = function guid() {
         var length = arguments.length <= 0 || arguments[0] === undefined ? 8 : arguments[0];
         return Math.random().toString(36).substr(2, length);
     };
-    exports.parseQueryString = function parseQueryString(querystring) {
+    function parseQueryString(querystring) {
+        if (!querystring) {
+            return {};
+        }
         return querystring.split('&').reduce(function (query, term) {
-            term = term.split('=');
-            var name = decodeURIComponent(term[0]);
-            var value = decodeURIComponent(term[1]);
+            var index = term.indexOf('=');
+            var name = decodeURIComponent(term.slice(0, index));
+            var value = decodeURIComponent(term.slice(index + 1));
             if (!name) {
                 return query;
             }
@@ -61,7 +118,8 @@ define('numen/util', [
             }
             return query;
         }, {});
-    };
+    }
+    exports.parseQueryString = parseQueryString;
     exports.getHash = function getHash(target) {
         var href = target.href;
         var index = href.indexOf('#');
