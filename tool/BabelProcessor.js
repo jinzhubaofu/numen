@@ -62,8 +62,8 @@ Babel.prototype.process = function (file, processContext, callback) {
     var code = result.code;
 
     if (result.metadata.usedHelpers.length) {
-        // var prefix = 'var babelHelpers = require("' + babelHelperRelativePath + '");\n';
-        // code = prefix + code;
+        var prefix = 'import babelHelpers from "' + babelHelperRelativePath + '";\n';
+        code = prefix + code;
         processContext.usedHelpers = processContext
             .usedHelpers
             .concat(result.metadata.usedHelpers);
