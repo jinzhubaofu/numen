@@ -11,10 +11,6 @@ exports.output = require('path').resolve(__dirname, 'output');
 
 exports.getProcessors = function () {
 
-    var module = new ModuleCompiler({
-        bizId: 'numen'
-    });
-
     var path = new PathMapper({
         from: 'src',
         to: 'dist'
@@ -23,24 +19,26 @@ exports.getProcessors = function () {
     var babel = new BabelProcessor({
         files: ['src/**/*.js'],
         compileOptions: {
-            modules: 'commonStrict',
             compact: false,
             ast: false,
-            blacklist: ['strict'],
-            externalHelpers: true,
-            loose: 'all'
+            presets: [
+                'es2015', 'react'
+            ],
+            plugins: [
+                'external-helpers-2',
+                'transform-es2015-modules-umd',
+                'transform-object-rest-spread'
+            ],
+            moduleId: '',
+            getModuleId: function (filename) {
+                return filename.replace('src/', '');
+            }
         }
-    });
-
-    var amdWrapper = new AmdWrapper({
-        files: ['src/**/*.js']
     });
 
     return {
         'default': [
             babel,
-            amdWrapper,
-            module,
             // js,
             path
         ]
@@ -91,7 +89,6 @@ exports.injectProcessor = function (processors) {
         global[key] = processors[key];
     }
 
-    global.AmdWrapper = require('./tool/AmdWrapper.js');
     global.BabelProcessor = require('./tool/BabelProcessor.js');
 
 };

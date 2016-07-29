@@ -80,7 +80,7 @@ Babel.prototype.process = function (file, processContext, callback) {
 Babel.prototype.afterAll = function (processContext) {
 
     var usedHelpers = ''
-        + babel.buildExternalHelpers(processContext.usedHelpers, 'var')
+        + babel.buildExternalHelpers(processContext.usedHelpers, 'umd')
         + '\nmodule.exports = babelHelpers;';
 
     var baseDir = processContext.baseDir;
