@@ -1,4 +1,3 @@
-var babelHelpers = require("./babelHelpers");
 (function (global, factory) {
     if (typeof define === "function" && define.amd) {
         define(['module', './action', './util'], factory);

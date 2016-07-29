@@ -111,4 +111,3 @@
     return call && (typeof call === "object" || typeof call === "function") ? call : self;
   };
 });
-module.exports = babelHelpers;

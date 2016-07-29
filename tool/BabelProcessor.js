@@ -62,8 +62,8 @@ Babel.prototype.process = function (file, processContext, callback) {
     var code = result.code;
 
     if (result.metadata.usedHelpers.length) {
-        var prefix = 'var babelHelpers = require("' + babelHelperRelativePath + '");\n';
-        code = prefix + code;
+        // var prefix = 'var babelHelpers = require("' + babelHelperRelativePath + '");\n';
+        // code = prefix + code;
         processContext.usedHelpers = processContext
             .usedHelpers
             .concat(result.metadata.usedHelpers);
@@ -80,8 +80,7 @@ Babel.prototype.process = function (file, processContext, callback) {
 Babel.prototype.afterAll = function (processContext) {
 
     var usedHelpers = ''
-        + babel.buildExternalHelpers(processContext.usedHelpers, 'umd')
-        + '\nmodule.exports = babelHelpers;';
+        + babel.buildExternalHelpers(processContext.usedHelpers, 'umd');
 
     var baseDir = processContext.baseDir;
 
