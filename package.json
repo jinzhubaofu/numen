@@ -1,11 +1,12 @@
 {
   "name": "numen",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "history api manager",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "sh tool/build-amd.sh"
+    "build": "sh tool/build.sh",
+    "release": "sh tool/release.sh"
   },
   "edp": {
     "wwwroot": "/",
@@ -15,12 +16,20 @@
     "loaderUrl": "http://s1.bdstatic.com/r/www/cache/ecom/esl/1-8-2/esl.js",
     "dependencies": {}
   },
-  "dependencies": {},
+  "dependencies": {
+    "babel-core": "^6.11.4"
+  },
   "author": "lupengyu@baidu.com",
   "repository": "empty",
   "license": "BSD",
   "readme": "README",
   "devDependencies": {
-    "babel-core": "^5.8.34"
+    "babel-core": "^6.11.4",
+    "babel-plugin-external-helpers-2": "^6.1.18",
+    "babel-plugin-syntax-object-rest-spread": "^6.1.18",
+    "babel-plugin-transform-es2015-modules-umd": "^6.6.5",
+    "babel-plugin-transform-object-rest-spread": "^6.1.18",
+    "babel-preset-es2015": "^6.1.18",
+    "babel-preset-es2015-loose": "^7.0.0"
   }
 }
