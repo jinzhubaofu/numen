@@ -1,23 +1,21 @@
-import babelHelpers from "./babelHelpers";
 (function (global, factory) {
     if (typeof define === "function" && define.amd) {
-        define(['module', './action', './util'], factory);
+        define(['module', './babelHelpers', './action', './util'], factory);
     } else if (typeof exports !== "undefined") {
-        factory(module, require('./action'), require('./util'));
+        factory(module, require('./babelHelpers'), require('./action'), require('./util'));
     } else {
         var mod = {
             exports: {}
         };
-        factory(mod, global.action, global.util);
+        factory(mod, global.babelHelpers, global.action, global.util);
         global.Location = mod.exports;
     }
-})(this, function (module, action, util) {
+})(this, function (module, _babelHelpers, action, util) {
     'use strict';
 
-    var TRAVEL = action.TRAVEL; /**
-                                 * @file history/Location
-                                 * @author leon(ludafa@outlook.com)
-                                 */
+    var _babelHelpers2 = _babelHelpers2.default.interopRequireDefault(_babelHelpers);
+
+    var TRAVEL = action.TRAVEL;
 
     var normalize = util.normalize;
 
@@ -26,8 +24,8 @@ import babelHelpers from "./babelHelpers";
             var action = arguments.length <= 1 || arguments[1] === undefined ? TRAVEL : arguments[1];
             var id = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
             var title = arguments.length <= 3 || arguments[3] === undefined ? '' : arguments[3];
-            babelHelpers.classCallCheck(this, Location);
 
+            _babelHelpers2.default.classCallCheck(this, Location);
 
             this.title = title;
             this.action = action;
@@ -36,7 +34,7 @@ import babelHelpers from "./babelHelpers";
             Object.assign(this, util.pasreHref(normalize(href)));
         }
 
-        babelHelpers.createClass(Location, [{
+        _babelHelpers2.default.createClass(Location, [{
             key: 'toString',
             value: function toString() {
                 return '' + (this.pathname || '') + (this.search || '');
@@ -55,6 +53,7 @@ import babelHelpers from "./babelHelpers";
                 return pathname === anotherLocation.pathname && search === anotherLocation.search;
             }
         }]);
+
         return Location;
     }();
 

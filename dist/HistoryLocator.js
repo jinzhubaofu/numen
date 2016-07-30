@@ -1,24 +1,21 @@
-import babelHelpers from "./babelHelpers";
 (function (global, factory) {
     if (typeof define === "function" && define.amd) {
-        define(['module', './Locator', './Location', './util', './action'], factory);
+        define(['module', './babelHelpers', './Locator', './Location', './util', './action'], factory);
     } else if (typeof exports !== "undefined") {
-        factory(module, require('./Locator'), require('./Location'), require('./util'), require('./action'));
+        factory(module, require('./babelHelpers'), require('./Locator'), require('./Location'), require('./util'), require('./action'));
     } else {
         var mod = {
             exports: {}
         };
-        factory(mod, global.Locator, global.Location, global.util, global.action);
+        factory(mod, global.babelHelpers, global.Locator, global.Location, global.util, global.action);
         global.HistoryLocator = mod.exports;
     }
-})(this, function (module, Locator, Location, util, action) {
+})(this, function (module, _babelHelpers, Locator, Location, util, action) {
     'use strict';
 
-    var addEventListener = util.addEventListener; /**
-                                                   * @file HistoryLocator
-                                                   * @author leon(ludafa@outlook.com)
-                                                   */
+    var _babelHelpers2 = _babelHelpers2.default.interopRequireDefault(_babelHelpers);
 
+    var addEventListener = util.addEventListener;
     var removeEventListener = util.removeEventListener;
     var guid = util.guid;
 
@@ -31,17 +28,18 @@ import babelHelpers from "./babelHelpers";
     var HISTORY_API_SUPPORTED = typeof window.history.pushState === 'function';
 
     var HistoryLocator = function (_Locator) {
-        babelHelpers.inherits(HistoryLocator, _Locator);
+        _babelHelpers2.default.inherits(HistoryLocator, _Locator);
 
         function HistoryLocator() {
-            babelHelpers.classCallCheck(this, HistoryLocator);
-            return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(HistoryLocator).apply(this, arguments));
+            _babelHelpers2.default.classCallCheck(this, HistoryLocator);
+
+            return _babelHelpers2.default.possibleConstructorReturn(this, Object.getPrototypeOf(HistoryLocator).apply(this, arguments));
         }
 
-        babelHelpers.createClass(HistoryLocator, [{
+        _babelHelpers2.default.createClass(HistoryLocator, [{
             key: 'start',
             value: function start() {
-                babelHelpers.get(Object.getPrototypeOf(HistoryLocator.prototype), 'start', this).call(this);
+                _babelHelpers2.default.get(Object.getPrototypeOf(HistoryLocator.prototype), 'start', this).call(this);
                 addEventListener(window, 'popstate', this.onLocationChange);
                 return this;
             }
@@ -88,7 +86,7 @@ import babelHelpers from "./babelHelpers";
 
                     // 如果支持 history api 我们才可以这样搞，要不然就直接挂了
                     if (HISTORY_API_SUPPORTED) {
-                        window.history.replaceState(babelHelpers.extends({}, state, babelHelpers.defineProperty({}, HISTORY_LOCATOR_STATE_ID_KEY, id)), null, path);
+                        window.history.replaceState(_babelHelpers2.default.extends({}, state, _babelHelpers2.default.defineProperty({}, HISTORY_LOCATOR_STATE_ID_KEY, id)), null, path);
                     }
                 }
 
@@ -101,7 +99,7 @@ import babelHelpers from "./babelHelpers";
                 var title = nextLocation.title;
 
 
-                var state = babelHelpers.defineProperty({}, HISTORY_LOCATOR_STATE_ID_KEY, nextLocation.id);
+                var state = _babelHelpers2.default.defineProperty({}, HISTORY_LOCATOR_STATE_ID_KEY, nextLocation.id);
 
                 var nextLocationHref = nextLocation.toString();
 
@@ -120,7 +118,7 @@ import babelHelpers from "./babelHelpers";
                         break;
                 }
 
-                babelHelpers.get(Object.getPrototypeOf(HistoryLocator.prototype), 'finishTransit', this).call(this, nextLocation);
+                _babelHelpers2.default.get(Object.getPrototypeOf(HistoryLocator.prototype), 'finishTransit', this).call(this, nextLocation);
             }
         }, {
             key: 'createHref',
@@ -134,6 +132,7 @@ import babelHelpers from "./babelHelpers";
                 this.listeners.length = 0;
             }
         }]);
+
         return HistoryLocator;
     }(Locator);
 

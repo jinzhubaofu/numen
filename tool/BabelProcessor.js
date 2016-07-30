@@ -50,8 +50,10 @@ Babel.prototype.process = function (file, processContext, callback) {
 
     var filePath = file.path;
 
+    var fileData = 'import babelHelpers from "' + babelHelperRelativePath + '";\n' + file.data;
+
     var result = babel.transform(
-        file.data,
+        fileData,
         Object.assign(
             {},
             this.compileOptions,
@@ -62,8 +64,6 @@ Babel.prototype.process = function (file, processContext, callback) {
     var code = result.code;
 
     if (result.metadata.usedHelpers.length) {
-        var prefix = 'import babelHelpers from "' + babelHelperRelativePath + '";\n';
-        code = prefix + code;
         processContext.usedHelpers = processContext
             .usedHelpers
             .concat(result.metadata.usedHelpers);

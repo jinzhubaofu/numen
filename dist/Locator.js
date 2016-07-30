@@ -1,24 +1,21 @@
-import babelHelpers from "./babelHelpers";
 (function (global, factory) {
     if (typeof define === "function" && define.amd) {
-        define(['module', './util', './Location', './action'], factory);
+        define(['module', './babelHelpers', './util', './Location', './action'], factory);
     } else if (typeof exports !== "undefined") {
-        factory(module, require('./util'), require('./Location'), require('./action'));
+        factory(module, require('./babelHelpers'), require('./util'), require('./Location'), require('./action'));
     } else {
         var mod = {
             exports: {}
         };
-        factory(mod, global.util, global.Location, global.action);
+        factory(mod, global.babelHelpers, global.util, global.Location, global.action);
         global.Locator = mod.exports;
     }
-})(this, function (module, util, Location, action) {
+})(this, function (module, _babelHelpers, util, Location, action) {
     'use strict';
 
-    var toQueryString = util.toQueryString; /**
-                                             * @file History
-                                             * @author leon(ludafa@outlook.com)
-                                             */
+    var _babelHelpers2 = _babelHelpers2.default.interopRequireDefault(_babelHelpers);
 
+    var toQueryString = util.toQueryString;
     var guid = util.guid;
     var addQuery = util.addQuery;
 
@@ -28,7 +25,7 @@ import babelHelpers from "./babelHelpers";
 
     var History = function () {
         function History() {
-            babelHelpers.classCallCheck(this, History);
+            _babelHelpers2.default.classCallCheck(this, History);
 
             this.onLocationChange = this.onLocationChange.bind(this);
             this.listeners = [];
@@ -37,7 +34,7 @@ import babelHelpers from "./babelHelpers";
             this.stack = [];
         }
 
-        babelHelpers.createClass(History, [{
+        _babelHelpers2.default.createClass(History, [{
             key: 'onLocationChange',
             value: function onLocationChange(e) {
                 this.transit(this.getLocation(e));
@@ -268,9 +265,10 @@ import babelHelpers from "./babelHelpers";
                 var title = currentLocation.title;
 
 
-                this.redirect(pathname, babelHelpers.extends({}, query, nextQuery), false, title);
+                this.redirect(pathname, _babelHelpers2.default.extends({}, query, nextQuery), false, title);
             }
         }]);
+
         return History;
     }();
 

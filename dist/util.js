@@ -1,17 +1,19 @@
 (function (global, factory) {
     if (typeof define === "function" && define.amd) {
-        define(['exports'], factory);
+        define(['exports', './babelHelpers'], factory);
     } else if (typeof exports !== "undefined") {
-        factory(exports);
+        factory(exports, require('./babelHelpers'));
     } else {
         var mod = {
             exports: {}
         };
-        factory(mod.exports);
+        factory(mod.exports, global.babelHelpers);
         global.util = mod.exports;
     }
-})(this, function (exports) {
+})(this, function (exports, _babelHelpers) {
     'use strict';
+
+    var _babelHelpers2 = _babelHelpers2.default.interopRequireDefault(_babelHelpers);
 
     /**
      * @file util
