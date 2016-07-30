@@ -1,8 +1,8 @@
 (function (global, factory) {
     if (typeof define === "function" && define.amd) {
-        define(['module', './babelHelpers', './util', './Location', './action'], factory);
+        define(['module', "./babelHelpers", './util', './Location', './action'], factory);
     } else if (typeof exports !== "undefined") {
-        factory(module, require('./babelHelpers'), require('./util'), require('./Location'), require('./action'));
+        factory(module, require("./babelHelpers"), require('./util'), require('./Location'), require('./action'));
     } else {
         var mod = {
             exports: {}
@@ -10,12 +10,15 @@
         factory(mod, global.babelHelpers, global.util, global.Location, global.action);
         global.Locator = mod.exports;
     }
-})(this, function (module, _babelHelpers, util, Location, action) {
+})(this, function (module, babelHelpers, util, Location, action) {
     'use strict';
 
-    var _babelHelpers2 = _babelHelpers2.default.interopRequireDefault(_babelHelpers);
-
     var toQueryString = util.toQueryString;
+    /**
+     * @file History
+     * @author leon(ludafa@outlook.com)
+     */
+
     var guid = util.guid;
     var addQuery = util.addQuery;
 
@@ -25,7 +28,7 @@
 
     var History = function () {
         function History() {
-            _babelHelpers2.default.classCallCheck(this, History);
+            babelHelpers.classCallCheck(this, History);
 
             this.onLocationChange = this.onLocationChange.bind(this);
             this.listeners = [];
@@ -34,7 +37,7 @@
             this.stack = [];
         }
 
-        _babelHelpers2.default.createClass(History, [{
+        babelHelpers.createClass(History, [{
             key: 'onLocationChange',
             value: function onLocationChange(e) {
                 this.transit(this.getLocation(e));
@@ -265,10 +268,9 @@
                 var title = currentLocation.title;
 
 
-                this.redirect(pathname, _babelHelpers2.default.extends({}, query, nextQuery), false, title);
+                this.redirect(pathname, babelHelpers.extends({}, query, nextQuery), false, title);
             }
         }]);
-
         return History;
     }();
 

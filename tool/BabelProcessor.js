@@ -50,7 +50,7 @@ Babel.prototype.process = function (file, processContext, callback) {
 
     var filePath = file.path;
 
-    var fileData = 'import babelHelpers from "' + babelHelperRelativePath + '";\n' + file.data;
+    var fileData = 'var babelHelpers = require("' + babelHelperRelativePath + '");\n' + file.data;
 
     var result = babel.transform(
         fileData,
