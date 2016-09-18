@@ -26,7 +26,7 @@ gulp.task('clean', function () {
         .pipe(clean());
 });
 
-gulp.task('build', ['clean', 'babel'], function () {
+gulp.task('build', ['babel'], function () {
     return gulp
         .src('package.json')
         .pipe(gulp.dest('lib'));
