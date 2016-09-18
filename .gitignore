@@ -3,3 +3,4 @@ dep
 output
 docs
 lib/package.json
+**/*.log

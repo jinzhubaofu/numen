@@ -20,18 +20,16 @@ gulp.task('babel', function () {
         .pipe(gulp.dest('lib'));
 });
 
-gulp.task('build', ['babel'], function () {
-    return gulp
-        .src('package.json')
-        .pipe(gulp.dest('lib'));
-});
-
 gulp.task('clean', function () {
     return gulp
         .src('lib', {read: false})
         .pipe(clean());
 });
 
-gulp.task('rebuild', ['clean', 'build']);
+gulp.task('build', ['clean', 'babel'], function () {
+    return gulp
+        .src('package.json')
+        .pipe(gulp.dest('lib'));
+});
 
 gulp.task('default', ['build']);
