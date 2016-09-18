@@ -1,6 +1,6 @@
 {
   "name": "numen",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "history api manager",
   "main": "lib/Locator.js",
   "authors": [
@@ -8,7 +8,9 @@
   ],
   "license": "MIT",
   "homepage": "https://github.com/jinzhubaofu/numen",
-  "moduleType": ["umd"],
+  "moduleType": [
+    "umd"
+  ],
   "ignore": [
     "**/.*",
     "node_modules",

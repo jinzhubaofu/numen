@@ -1,6 +1,6 @@
 {
   "name": "numen",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "history api manager",
   "main": "index.js",
   "scripts": {
