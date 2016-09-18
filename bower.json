@@ -22,6 +22,8 @@
     "dep",
     "doc",
     "example",
-    "docs"
+    "docs",
+    "esdoc.json",
+    "gulpfile.js"
   ]
 }
