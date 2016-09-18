@@ -13,9 +13,6 @@
     "coveralls": "cat test/coverage/lcov/lcov.info | ./node_modules/.bin/coveralls",
     "docs": "esdoc -c esdoc.json"
   },
-  "dependencies": {
-    "babel-core": "^6.11.4"
-  },
   "author": "ludafa@outlook.com",
   "repository": "empty",
   "license": "MIT",
