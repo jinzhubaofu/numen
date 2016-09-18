@@ -6,16 +6,17 @@
 const Locator =  require('./Locator');
 const Location =  require('./Location');
 
-const util = require('./util');
+const {
+    addEventListener,
+    removeEventListener,
+    guid
+} = require('./util');
 
-const addEventListener = util.addEventListener;
-const removeEventListener = util.removeEventListener;
-const guid = util.guid;
-
-const action = require('./action');
-const PUSH = action.PUSH;
-const REPLACE = action.REPLACE;
-const TRAVEL = action.TRAVEL;
+const {
+    PUSH,
+    REPLACE,
+    TRAVEL
+} = require('./action');
 
 const HISTORY_LOCATOR_STATE_ID_KEY = '__hlik__';
 
@@ -122,15 +123,6 @@ class HistoryLocator extends Locator {
 
         super.finishTransit(nextLocation);
 
-    }
-
-    createHref(nextLocation) {
-        return nextLocation ? nextLocation.toString() : 'javascript: void 0';
-    }
-
-    dispose() {
-        this.stop();
-        this.listeners.length = 0;
     }
 
 }

@@ -2,13 +2,13 @@
   "name": "numen",
   "version": "0.1.4",
   "description": "history api manager",
-  "main": "src/Locator.js",
+  "main": "lib/Locator.js",
   "authors": [
     "ludafa@outlook.com"
   ],
-  "license": "BSD",
+  "license": "MIT",
   "homepage": "https://github.com/jinzhubaofu/numen",
-  "moduleType": [],
+  "moduleType": ["umd"],
   "ignore": [
     "**/.*",
     "node_modules",
@@ -19,6 +19,7 @@
     "src",
     "dep",
     "doc",
-    "example"
+    "example",
+    "docs"
   ]
 }

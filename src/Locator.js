@@ -1,22 +1,34 @@
 /**
- * @file History
+ * @file Locator
  * @author leon(ludafa@outlook.com)
  */
 
-const util = require('./util');
-const toQueryString = util.toQueryString;
-const guid = util.guid;
-const addQuery = util.addQuery;
-
 const Location =  require('./Location');
 
-const action = require('./action');
-const PUSH = action.PUSH;
-const REPLACE = action.REPLACE;
-const TRAVEL = action.TRAVEL;
+const {
+    toQueryString,
+    guid,
+    addQuery
+} = require('./util');
 
-class History {
+const {
+    PUSH,
+    REPLACE,
+    TRAVEL
+} = require('./action');
 
+/**
+ * 定位器
+ *
+ * @abstract
+ */
+class Locator {
+
+    /**
+     * 构造函数
+     *
+     * @public
+     */
     constructor() {
         this.onLocationChange = this.onLocationChange.bind(this);
         this.listeners = [];
@@ -25,25 +37,56 @@ class History {
         this.stack = [];
     }
 
+    /**
+     * 地址发生变化时处理函数
+     *
+     * @param {Object} e 地址变化事件
+     * @protected
+     */
     onLocationChange(e) {
         this.transit(this.getLocation(e));
     }
 
+    /**
+     * 获取当前地址
+     *
+     * @abstract
+     * @return {Location}
+     */
     getLocation() {
         throw new Error('history.getLocation() need implement');
     }
 
+    /**
+     * 开始监听
+     *
+     * @public
+     */
     start() {
         let nextLocation = this.getLocation();
         this.stack = [nextLocation.id];
         this.transit(nextLocation);
     }
 
+    /**
+     * 添加事件监听
+     *
+     * @public
+     * @param {Function} handler 回调函数
+     * @return {Locator}
+     */
     on(handler) {
         this.listeners.push(handler);
         return this;
     }
 
+    /**
+     * 移除事件监听
+     *
+     * @public
+     * @param {Function} handler 回调函数
+     * @return {Locator}
+     */
     off(handler) {
         this.listeners = this.listeners.filter(function (item) {
             return item !== handler;
@@ -51,7 +94,16 @@ class History {
         return this;
     }
 
-    redirect(url, query={}, force=false, title='') {
+    /**
+     * 跳转
+     *
+     * @public
+     * @param {string}   url   url
+     * @param {?Object}  query query
+     * @param {?boolean} force 强制跳转（即使当前 Location 与即将转向的 Location 一致仍触发 change 事件）
+     * @param {?string}  title 标题
+     */
+    redirect(url, query = {}, force = false, title = '') {
         let nextLocation = new Location(
             addQuery(url, query),
             PUSH,
@@ -61,7 +113,16 @@ class History {
         this.transit(nextLocation, force);
     }
 
-    replace(url, query={}, force=false, title='') {
+    /**
+     * 替换当前地址
+     *
+     * @public
+     * @param {string}   url   url
+     * @param {?Object}  query query
+     * @param {?boolean} force 强制跳转（即使当前 Location 与即将转向的 Location 一致仍触发 change 事件）
+     * @param {?string}  title 标题
+     */
+    replace(url, query = {}, force = false, title = '') {
         let nextLocation = new Location(
             addQuery(url, query),
             REPLACE,
@@ -71,13 +132,24 @@ class History {
         this.transit(nextLocation, force);
     }
 
+    /**
+     * 重载
+     *
+     * @public
+     */
     reload() {
         this.transit(this.getLocation(), true);
     }
 
+    /**
+     * 转向
+     *
+     * @param {Location} nextLocation 下一下地址
+     * @param {boolean}  force        强制转转
+     */
     transit(nextLocation, force) {
 
-        let {currentLocation} = this;
+        let currentLocation = this.currentLocation;
 
         if (currentLocation && currentLocation.equalTo(nextLocation)) {
             if (force) {
@@ -86,7 +158,7 @@ class History {
             return;
         }
 
-        this.intercept(nextLocation, (ok) => {
+        this.intercept(nextLocation, ok => {
 
             // 如果跳转没有被拦截，那么我们就完成之
             if (ok) {
@@ -135,8 +207,15 @@ class History {
 
     }
 
-    getLocationIndex(loc) {
-        return this.stack.indexOf(loc.id);
+    /**
+     * 获取地地址在历史栈中的序号
+     *
+     * @protected
+     * @param {Location} location 地址
+     * @return {number}
+     */
+    getLocationIndex(location) {
+        return this.stack.indexOf(location.id);
     }
 
     /**
@@ -180,6 +259,12 @@ class History {
 
     }
 
+    /**
+     * 触发回调
+     *
+     * @protected
+     * @param {module:Location} nextLocation 下一个地址
+     */
     notifyAll(nextLocation) {
         // 触发回调
         this.listeners.forEach(function (listener) {
@@ -187,40 +272,83 @@ class History {
         });
     }
 
+    /**
+     * 获取历史栈的长度
+     *
+     * @return {number}
+     */
     getLength() {
         return this.stack.length;
     }
 
+    /**
+     * 前向/前后指定步数
+     *
+     * 基本等同于 window.location.go
+     *
+     * @public
+     * @param {number} delta 步数
+     */
     go(delta) {
         if (delta) {
             window.history.go(delta);
         }
     }
 
+    /**
+     * 回退
+     *
+     * @public
+     */
     back() {
         this.go(-1);
     }
 
+    /**
+     * 前进
+     *
+     * @public
+     */
     forward() {
         this.go(1);
     }
 
+    /**
+     * 生成 href
+     *
+     * @public
+     * @param {string}  pathname pathname
+     * @param {?Object} query    query
+     * @return {string}
+     */
     createHref(pathname, query) {
         let index = pathname.indexOf('?');
         let connector = index === -1 ? '?' : '&';
         return pathname + connector + toQueryString(query);
     }
 
-    dispose() {
-        this.stop();
-        this.listeners.length = 0;
-    }
-
+    /**
+     * 添加拦截器
+     *
+     * @public
+     * @param {Function} interceptor 拦截器
+     * @return {module:Locator}
+     */
     use(interceptor) {
         this.interceptors.push(interceptor);
         return this;
     }
 
+    /**
+     * 拦截
+     *
+     * 按照用户指定的拦截器栈的顺序，依次调用拦截器；
+     *
+     * @protected
+     * @param  {module:Location} nextLocation 下一个地址
+     * @param  {Function}        callback     完成时回调函数
+     * @return {module:Locator}
+     */
     intercept(nextLocation, callback) {
 
         let current = 0;
@@ -250,10 +378,15 @@ class History {
 
     }
 
+    /**
+     * 按指定的 query 生成一个新的 href，并跳转到新 href
+     *
+     * @public
+     * @param {Object} nextQuery 合并的 query
+     */
     update(nextQuery) {
 
-        let {currentLocation} = this;
-        let {pathname, query, title} = currentLocation;
+        let {pathname, query, title} = this.currentLocation;
 
         this.redirect(
             pathname,
@@ -267,6 +400,16 @@ class History {
 
     }
 
+    /**
+     * 析构
+     *
+     * @public
+     */
+    dispose() {
+        this.stop();
+        this.listeners.length = 0;
+    }
+
 }
 
-module.exports = History;
+module.exports = Locator;
