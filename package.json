@@ -1,6 +1,6 @@
 {
   "name": "numen",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "history api manager",
   "main": "index.js",
   "scripts": {
@@ -18,7 +18,6 @@
   "license": "MIT",
   "readme": "readme.md",
   "devDependencies": {
-    "babel-loader": "^6.2.5",
     "babel-plugin-external-helpers": "^6.8.0",
     "babel-plugin-external-helpers-insert-require": "^1.0.2",
     "babel-plugin-transform-es2015-modules-umd": "^6.12.0",

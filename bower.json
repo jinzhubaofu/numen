@@ -1,6 +1,6 @@
 {
   "name": "numen",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "history api manager",
   "main": "lib/Locator.js",
   "authors": [

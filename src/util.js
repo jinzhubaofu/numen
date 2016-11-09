@@ -132,7 +132,7 @@ exports.pasreHref = pasreHref;
  * @param {Object} query query
  * @return {string}
  */
-exports.addQuery = function addQuery(href, query) {
+exports.addQuery = function addQuery(href, query = {}) {
 
     const location = pasreHref(href);
 
