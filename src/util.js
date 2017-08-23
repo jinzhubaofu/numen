@@ -194,10 +194,23 @@ function parseQueryString(querystring) {
         .split('&')
         .reduce(function (query, term) {
 
+            if (!term) {
+                return query;
+            }
+
             const index = term.indexOf('=');
 
-            let name = decodeURIComponent(term.slice(0, index));
-            let value = decodeURIComponent(term.slice(index + 1));
+            let name;
+            let value;
+
+            if (index < 0) {
+                name = decodeURIComponent(term);
+                value = '';
+            }
+            else {
+                name = decodeURIComponent(term.slice(0, index));
+                value = decodeURIComponent(term.slice(index + 1));
+            }
 
             if (!name) {
                 return query;
