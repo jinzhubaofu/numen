@@ -20,11 +20,15 @@ const {
 
 const HISTORY_LOCATOR_STATE_ID_KEY = '__hlik__';
 
-const HISTORY_API_SUPPORTED = typeof window.history.pushState === 'function';
-
 class HistoryLocator extends Locator {
 
     start() {
+
+        if (typeof window !== 'object') {
+            console.log('[WARN] numen only works in browsers')
+            return;
+        }
+
         super.start();
         addEventListener(window, 'popstate', this.onLocationChange);
         return this;
@@ -72,7 +76,7 @@ class HistoryLocator extends Locator {
             id = guid();
 
             // 如果支持 history api 我们才可以这样搞，要不然就直接挂了
-            if (HISTORY_API_SUPPORTED) {
+            if (typeof window.history.replaceState === 'function') {
                 window.history.replaceState(
                     {
                         ...state,
@@ -107,7 +111,7 @@ class HistoryLocator extends Locator {
         const nextLocationHref = nextLocation.toString();
 
         // 如果当前浏览器不支持 history api 我们默认的行为是跳转
-        if (!HISTORY_API_SUPPORTED) {
+        if (typeof window.history.pushState === 'function') {
             window.location = nextLocationHref;
             return;
         }

@@ -4,3 +4,4 @@ output
 docs
 lib/package.json
 **/*.log
+lib

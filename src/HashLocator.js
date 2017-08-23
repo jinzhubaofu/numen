@@ -69,6 +69,10 @@ class HashLocator extends Locator {
      * @override
      */
     start() {
+        if (typeof window !== 'object') {
+            console.log('[WARN] numen only works in browsers')
+            return;
+        }
         super.start();
         addEventListener(window, 'hashchange', this.onLocationChange);
         return this;

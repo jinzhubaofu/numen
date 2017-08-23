@@ -1,0 +1,8 @@
+files:
+    - src
+
+eslint:
+    rules:
+        fecs-no-require: -1
+        fecs-min-vars-per-destructure: -1
+        no-console: 0
