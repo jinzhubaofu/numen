@@ -25,7 +25,7 @@ class HistoryLocator extends Locator {
     start() {
 
         if (typeof window !== 'object') {
-            console.log('[WARN] numen only works in browsers')
+            console.log('[WARN] numen only works in browsers');
             return;
         }
 
@@ -111,7 +111,7 @@ class HistoryLocator extends Locator {
         const nextLocationHref = nextLocation.toString();
 
         // 如果当前浏览器不支持 history api 我们默认的行为是跳转
-        if (typeof window.history.pushState === 'function') {
+        if (typeof window.history.pushState !== 'function') {
             window.location = nextLocationHref;
             return;
         }
