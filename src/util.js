@@ -10,15 +10,17 @@
  * @param {string} eventName 事件名
  * @param {Function} handler   回调函数
  */
-exports.addEventListener = function addEventListener(target, eventName, handler) {
-
+exports.addEventListener = function addEventListener(
+    target,
+    eventName,
+    handler
+) {
     if (target.addEventListener) {
         target.addEventListener(eventName, handler);
         return;
     }
 
     target.attachEvent('on' + eventName, handler);
-
 };
 
 /**
@@ -28,8 +30,11 @@ exports.addEventListener = function addEventListener(target, eventName, handler)
  * @param {string} eventName 事件名
  * @param {Function} handler   回调函数
  */
-exports.removeEventListener = function removeEventListener(target, eventName, handler) {
-
+exports.removeEventListener = function removeEventListener(
+    target,
+    eventName,
+    handler
+) {
     if (target.removeEventListener) {
         target.removeEventListener(eventName, handler);
         return;
@@ -45,39 +50,40 @@ exports.removeEventListener = function removeEventListener(target, eventName, ha
  * @return {string}
  */
 function toQueryString(query) {
-
     if (!query) {
         return '';
     }
 
-    return Object
-        .keys(query)
-        // 打平结构
-        .reduce(function (items, name) {
+    return (
+        Object.keys(query)
+            // 打平结构
+            .reduce(function(items, name) {
+                const value = query[name];
+                const item = Array.isArray(value)
+                    ? value.map(function(v) {
+                          return {
+                              name,
+                              value: v
+                          };
+                      })
+                    : {name, value};
 
-            const value = query[name];
-            const item = Array.isArray(value)
-                ? value.map(function (v) {
-                    return {
-                        name,
-                        value: v
-                    };
-                })
-                : {name, value};
-
-            return items.concat(item);
-
-        }, [])
-        // 过滤掉无效项
-        .reduce(function (result, {name, value}) {
-            if (value != null) {
-                result.push(`${encodeURIComponent(name)}=${encodeURIComponent(value)}`);
-            }
-            return result;
-        }, [])
-        // 拼接在一起
-        .join('&');
-
+                return items.concat(item);
+            }, [])
+            // 过滤掉无效项
+            .reduce(function(result, {name, value}) {
+                if (value != null) {
+                    result.push(
+                        `${encodeURIComponent(name)}=${encodeURIComponent(
+                            value
+                        )}`
+                    );
+                }
+                return result;
+            }, [])
+            // 拼接在一起
+            .join('&')
+    );
 }
 
 exports.toQueryString = toQueryString;
@@ -89,7 +95,6 @@ exports.toQueryString = toQueryString;
  * @return {Object}
  */
 function pasreHref(href) {
-
     // 保证href是以 / 开头的，并不接受相对路径。。。
     href = (href.indexOf('/') === 0 ? '' : '/') + href;
 
@@ -118,9 +123,12 @@ function pasreHref(href) {
 
     return {
         href: originHref,
-        pathname, search, hash, query, querystring
+        pathname,
+        search,
+        hash,
+        query,
+        querystring
     };
-
 }
 
 exports.pasreHref = pasreHref;
@@ -133,39 +141,28 @@ exports.pasreHref = pasreHref;
  * @return {string}
  */
 exports.addQuery = function addQuery(href, query = {}) {
-
     const location = pasreHref(href);
 
-    const nextQuery = Object
-        .keys(query)
-        .reduce(
-            function (currentQuery, key) {
+    const nextQuery = Object.keys(query).reduce(function(currentQuery, key) {
+        const value = query[key];
+        const currentQueryValue = currentQuery[key];
 
-                const value = query[key];
-                const currentQueryValue = currentQuery[key];
+        if (Array.isArray(currentQueryValue)) {
+            currentQuery[key] = currentQueryValue.concat(value);
+        } else if (currentQuery[key] != null) {
+            currentQuery[key] = [currentQueryValue].concat(value);
+        } else {
+            currentQuery[key] = value;
+        }
 
-                if (Array.isArray(currentQueryValue)) {
-                    currentQuery[key] = currentQueryValue.concat(value);
-                }
-                else if (currentQuery[key] != null) {
-                    currentQuery[key] = [currentQueryValue].concat(value);
-                }
-                else {
-                    currentQuery[key] = value;
-                }
-
-                return currentQuery;
-
-            },
-            location.query
-        );
+        return currentQuery;
+    }, location.query);
 
     const nextQuerystring = toQueryString(nextQuery);
 
     return nextQuerystring
         ? `${location.pathname}?${nextQuerystring}`
         : location.pathname;
-
 };
 
 /**
@@ -175,7 +172,9 @@ exports.addQuery = function addQuery(href, query = {}) {
  * @return {string}
  */
 exports.guid = function guid(length = 8) {
-    return Math.random().toString(36).substr(2, length);
+    return Math.random()
+        .toString(36)
+        .substr(2, length);
 };
 
 /**
@@ -185,53 +184,44 @@ exports.guid = function guid(length = 8) {
  * @return {Object}
  */
 function parseQueryString(querystring) {
-
     if (!querystring) {
         return {};
     }
 
-    return querystring
-        .split('&')
-        .reduce(function (query, term) {
-
-            if (!term) {
-                return query;
-            }
-
-            const index = term.indexOf('=');
-
-            let name;
-            let value;
-
-            if (index < 0) {
-                name = decodeURIComponent(term);
-                value = '';
-            }
-            else {
-                name = decodeURIComponent(term.slice(0, index));
-                value = decodeURIComponent(term.slice(index + 1));
-            }
-
-            if (!name) {
-                return query;
-            }
-
-            let currentValue = query[name];
-
-            if (Array.isArray(currentValue)) {
-                currentValue.push(value);
-            }
-            else if (currentValue) {
-                query[name] = [currentValue, value];
-            }
-            else {
-                query[name] = value;
-            }
-
+    return querystring.split('&').reduce(function(query, term) {
+        if (!term) {
             return query;
+        }
 
-        }, {});
+        const index = term.indexOf('=');
 
+        let name;
+        let value;
+
+        if (index < 0) {
+            name = decodeURIComponent(term);
+            value = '';
+        } else {
+            name = decodeURIComponent(term.slice(0, index));
+            value = decodeURIComponent(term.slice(index + 1));
+        }
+
+        if (!name) {
+            return query;
+        }
+
+        let currentValue = query[name];
+
+        if (Array.isArray(currentValue)) {
+            currentValue.push(value);
+        } else if (currentValue) {
+            query[name] = [currentValue, value];
+        } else {
+            query[name] = value;
+        }
+
+        return query;
+    }, {});
 }
 
 exports.parseQueryString = parseQueryString;
@@ -259,7 +249,6 @@ const HTTP_PREFIX_REGEXP = /^(https?:\/\/[^\/]*)/;
  * @return {string}
  */
 exports.normalize = function normalize(path) {
-
     let match = HTTP_PREFIX_REGEXP.exec(path);
 
     if (match) {
@@ -271,5 +260,8 @@ exports.normalize = function normalize(path) {
     }
 
     return path;
+};
 
+exports.isAbsolute = function(url) {
+    return HTTP_PREFIX_REGEXP.test(url);
 };

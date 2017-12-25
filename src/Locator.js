@@ -3,19 +3,11 @@
  * @author leon(ludafa@outlook.com)
  */
 
-const Location =  require('./Location');
+const Location = require('./Location');
 
-const {
-    toQueryString,
-    guid,
-    addQuery
-} = require('./util');
+const {toQueryString, guid, addQuery, isAbsolute} = require('./util');
 
-const {
-    PUSH,
-    REPLACE,
-    TRAVEL
-} = require('./action');
+const {PUSH, REPLACE, TRAVEL} = require('./action');
 
 /**
  * 定位器
@@ -23,7 +15,6 @@ const {
  * @abstract
  */
 class Locator {
-
     /**
      * 构造函数
      *
@@ -88,7 +79,7 @@ class Locator {
      * @return {Locator}
      */
     off(handler) {
-        this.listeners = this.listeners.filter(function (item) {
+        this.listeners = this.listeners.filter(function(item) {
             return item !== handler;
         });
         return this;
@@ -104,6 +95,10 @@ class Locator {
      * @param {?string}  title 标题
      */
     redirect(url, query = {}, force = false, title = '') {
+        if (isAbsolute(url)) {
+            window.location = url;
+            return;
+        }
         let nextLocation = new Location(
             addQuery(url, query),
             PUSH,
@@ -123,6 +118,10 @@ class Locator {
      * @param {?string}  title 标题
      */
     replace(url, query = {}, force = false, title = '') {
+        if (isAbsolute(url)) {
+            window.location = url;
+            return;
+        }
         let nextLocation = new Location(
             addQuery(url, query),
             REPLACE,
@@ -148,7 +147,6 @@ class Locator {
      * @param {boolean}  force        强制转转
      */
     transit(nextLocation, force) {
-
         let currentLocation = this.currentLocation;
 
         if (currentLocation && currentLocation.equalTo(nextLocation)) {
@@ -159,7 +157,6 @@ class Locator {
         }
 
         this.intercept(nextLocation, ok => {
-
             // 如果跳转没有被拦截，那么我们就完成之
             if (ok) {
                 this.finishTransit(nextLocation);
@@ -189,10 +186,7 @@ class Locator {
 
             let nextLocationIndex = this.getLocationIndex(nextLocation);
 
-            if (
-                currentLocationIndex === -1
-                || nextLocationIndex === -1
-            ) {
+            if (currentLocationIndex === -1 || nextLocationIndex === -1) {
                 return;
             }
 
@@ -202,9 +196,7 @@ class Locator {
             this.go(currentLocationIndex - nextLocationIndex);
 
             return;
-
         });
-
     }
 
     /**
@@ -230,7 +222,6 @@ class Locator {
      * @param {module:Location} nextLocation 下一个location
      */
     finishTransit(nextLocation) {
-
         let {currentLocation, stack} = this;
 
         let {action, id} = nextLocation;
@@ -242,9 +233,10 @@ class Locator {
         // 这里只处理`产生`历史记录的操作(PUSH/REPLACE)，TRAVEL对应的是回退/前进，并不影响栈
         switch (action) {
             case PUSH:
-                this.stack = currentLocationIndex === -1
-                    ? [id]
-                    : stack.slice(0, currentLocationIndex + 1).concat(id);
+                this.stack =
+                    currentLocationIndex === -1
+                        ? [id]
+                        : stack.slice(0, currentLocationIndex + 1).concat(id);
                 break;
             case REPLACE:
                 if (currentLocationIndex !== -1) {
@@ -256,7 +248,6 @@ class Locator {
         this.notifyAll(nextLocation);
 
         this.currentLocation = nextLocation;
-
     }
 
     /**
@@ -267,7 +258,7 @@ class Locator {
      */
     notifyAll(nextLocation) {
         // 触发回调
-        this.listeners.forEach(function (listener) {
+        this.listeners.forEach(function(listener) {
             listener(nextLocation);
         });
     }
@@ -350,7 +341,6 @@ class Locator {
      * @return {module:Locator}
      */
     intercept(nextLocation, callback) {
-
         let current = 0;
         let isDone = false;
         let interceptors = this.interceptors.slice();
@@ -361,7 +351,6 @@ class Locator {
         }
 
         function next() {
-
             if (isDone || current === interceptors.length) {
                 isDone = true;
                 callback(true);
@@ -375,7 +364,6 @@ class Locator {
         next();
 
         return this;
-
     }
 
     /**
@@ -385,7 +373,6 @@ class Locator {
      * @param {Object} nextQuery 合并的 query
      */
     update(nextQuery) {
-
         let {pathname, query, title} = this.currentLocation;
 
         this.redirect(
@@ -397,7 +384,6 @@ class Locator {
             false,
             title
         );
-
     }
 
     /**
@@ -409,7 +395,6 @@ class Locator {
         this.stop();
         this.listeners.length = 0;
     }
-
 }
 
 module.exports = Locator;
