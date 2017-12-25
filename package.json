@@ -1,6 +1,6 @@
 {
     "name": "numen",
-    "version": "0.3.2",
+    "version": "0.3.3",
     "description": "history api manager",
     "main": "index.js",
     "scripts": {
@@ -9,8 +9,7 @@
         "lint": "fecs src",
         "test": "NODE_ENV=test karma start ./test/karma.local.conf.js",
         "test-ci": "NODE_ENV=test karma start ./test/karma.travis.conf.js",
-        "coveralls":
-            "cat test/coverage/lcov/lcov.info | ./node_modules/.bin/coveralls",
+        "coveralls": "cat test/coverage/lcov/lcov.info | ./node_modules/.bin/coveralls",
         "docs": "esdoc -c esdoc.json"
     },
     "author": "ludafa@outlook.com",
